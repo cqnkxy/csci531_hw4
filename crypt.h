@@ -3,6 +3,11 @@
 
 #include <iostream>
 
-void encrypt(std::istream&, std::string key, std::string tablefile);
+void encrypt_decrypt(
+	std::istream&,
+	std::string key,
+	std::string tablefile, 
+	bool decrypt=false
+);
 
 #endif

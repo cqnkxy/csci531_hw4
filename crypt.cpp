@@ -159,8 +159,9 @@ vector<bool> func_f(const vector<bool> &R, const vector<bool> &ki)
 }
 
 // encrypt 64 bits
-string encrypt_block(vector<bool> &block, bool output)
-{
+string encrypt_decrypt_block(
+	vector<bool> &block, bool output, bool decrypt
+){
 	assert(block.size() == 64);
 	vector<bool> L(32, 0), R(32, 0);
 	// L0, R0
@@ -172,9 +173,11 @@ string encrypt_block(vector<bool> &block, bool output)
 		fprintf(stderr, "(L0,R0)=%s\n", vec2str(combine2vec(L, R)).c_str());
 	}
 	for (int i = 0; i <= 15; ++i) {
-		vector<bool> newL = R, newR = xor_2vec(L, func_f(R, keys[i]));
+		vector<bool> &key = decrypt ? keys[15-i] : keys[i];
+		vector<bool> newL = R, newR = xor_2vec(L, func_f(R, key));
 		if (output) {
-			fprintf(stderr, "(L%d,R%d)=%s\n", i+1, i+1, vec2str(combine2vec(newL, newR)).c_str());
+			fprintf(stderr, "(L%d,R%d)=%s\n", i+1, i+1, 
+				vec2str(combine2vec(newL, newR)).c_str());
 		}
 		L = newL;
 		R = newR;
@@ -196,8 +199,11 @@ void generate_inv_IP()
 	}
 }
 
-void encrypt(istream &in, string key, string tablefile)
-{
+// encrypt and decrypt are almost the same except that they use subkeys in
+// different order
+void encrypt_decrypt(
+	istream &in, string key, string tablefile, bool decrypt=false
+){
 	vector<bool> key_bits;
 	checkkey(key, key_bits);
 	ifstream infile(tablefile.c_str());
@@ -223,6 +229,6 @@ void encrypt(istream &in, string key, string tablefile)
 		while(block.size() < 64){
 			block.push_back(0);
 		}
-		cout << encrypt_block(block, start);
+		cout << encrypt_decrypt_block(block, start, decrypt);
 	}
 }

@@ -55,21 +55,45 @@ void parse_encrypt(int argc, char *argv[])
 		}
 	}
 	if (argc == 4) {
-		encrypt(cin, key, tablefile);
+		encrypt_decrypt(cin, key, tablefile);
 	} else {
 		ifstream in(argv[4]);
 		if (!in.is_open()) {
 			cerr << "File not exits" << endl;
 			exit(1);
 		}
-		encrypt(in, key, tablefile);
+		encrypt_decrypt(in, key, tablefile);
 		in.close();
 	}
 }
 
 void parse_decrypt(int argc, char *argv[])
 {
-
+	if (argc != 4 && argc != 5) {
+		malformed_command();
+	}
+	string key, tablefile;
+	for (int i = 2; i <=3; i++) {
+		string opt(argv[i]);
+		if (opt.substr(0, 3) == "-t=") {
+			tablefile = opt.substr(3, -1);
+		} else if (opt.substr(0, 3) == "-k=") {
+			key = opt.substr(3, -1);
+		} else {
+			malformed_command();
+		}
+	}
+	if (argc == 4) {
+		encrypt_decrypt(cin, key, tablefile, true);
+	} else {
+		ifstream in(argv[4]);
+		if (!in.is_open()) {
+			cerr << "File not exits" << endl;
+			exit(1);
+		}
+		encrypt_decrypt(in, key, tablefile, true);
+		in.close();
+	}
 }
 
 void parse_encrypt3(int argc, char *argv[])
