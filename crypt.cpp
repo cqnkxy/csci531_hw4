@@ -143,7 +143,10 @@ vector<bool> func_f(const vector<bool> &R, const vector<bool> &ki)
 	for (int i = 0, r = 0; i < 48; i += 6, r++) {
 		vector<bool> six_bits = vector<bool>(tmp.begin()+i, tmp.begin()+i+6);
 		unsigned outer = (six_bits[0] << 1) | six_bits[5];
-		unsigned inner = (six_bits[1] << 3) | (six_bits[2] << 2) | (six_bits[3] << 1) | (six_bits[4]);
+		unsigned inner = (
+			(six_bits[1] << 3) | (six_bits[2] << 2) |
+			(six_bits[3] << 1) | (six_bits[4])
+		);
 		unsigned four_bits = table_s[r][outer*16+inner];
 		for (int j = 3; j >= 0; --j) {
 			ret.push_back((four_bits >> j) & 0x1);
