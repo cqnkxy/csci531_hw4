@@ -18,7 +18,10 @@ static vector<vector<vector<bool> > > keys_vec; //subkeys
 void encrypt3_decrypt3(
 	std::istream &in, std::string key, std::string tablefile,  bool decrypt=false
 ){
-	assert(key.size() == 48);
+	if (key.size() != 48) {
+		cerr << "Key must be 24 bytes hex string" << endl;
+		exit(1);
+	}
 	vector<vector<bool> > key_bits_vec(3, vector<bool>());
 	for (int i = 0; i < 3; i++) {
 		checkkey(key.substr(i*16, 16), key_bits_vec[i]);

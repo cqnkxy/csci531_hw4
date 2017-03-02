@@ -202,7 +202,7 @@ void tablecheck(
 		size_t equal_pos = line.find('=');
 		vector<int> res;
 		if (equal_pos == string::npos) {
-			cerr << "Malformed line!" << endl;
+			cerr << "Malformed tablefile!" << endl;
 			exit(1);
 		}
 		string opt = line.substr(0, equal_pos);
