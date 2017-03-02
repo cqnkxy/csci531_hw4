@@ -11,7 +11,7 @@ using namespace std;
 
 vector<int> IP, E, P, V, PC1, PC2, inv_IP;
 vector<vector<int> > table_s;
-vector<vector<bool> > keys;
+static vector<vector<bool> > keys; // subkeys
 
 int hex2dec(char ch)
 {
@@ -22,6 +22,7 @@ int hex2dec(char ch)
 	}
 }
 
+// Check to see if key is valid, and also transform it to bits vec
 void checkkey(const string &key, vector<bool> &key_bits)
 {
 	if (key.size() != 16) {
@@ -104,8 +105,10 @@ void left_circular_shift(vector<bool> &vec, int vi)
 
 // define vi (circular rotation values), 1 ≤ i ≤ 16 as follows vi = 1
 // for i ∈ {1,2,9,16}, vi = 2 otherwise
-void subkey(vector<bool> &key_bits)
-{
+void subkey(
+	vector<bool> &key_bits, vector<vector<bool> >&keys,
+	vector<int> &PC1, vector<int> &PC2
+){
 	vector<bool> C(28, 0), D(28, 0), k(48, 0);
 	// T ← PC1(k): represent T as 28-bit halfs (C0,D0), use PC1 to select
 	// bits from k: C0=b57b49...b36, D0=b63b55...b4
@@ -162,8 +165,8 @@ vector<bool> func_f(const vector<bool> &R, const vector<bool> &ki)
 }
 
 // encrypt 64 bits
-string encrypt_decrypt_block(
-	vector<bool> &block, bool output, bool decrypt
+vector<bool> encrypt_decrypt_block(
+	vector<bool> &block, bool output, bool decrypt, vector<vector<bool> > &keys
 ){
 	assert(block.size() == 64);
 	vector<bool> L(32, 0), R(32, 0);
@@ -191,10 +194,10 @@ string encrypt_decrypt_block(
 	for (int i = 0; i < 64; ++i) {
 		ret[i] = RL[inv_IP[i]-1];
 	}
-	return vec2char(ret);
+	return ret;
 }
 
-void generate_inv_IP()
+void generate_inv_IP(vector<int> &IP, vector<int> &inv_IP)
 {
 	inv_IP.assign(64, 0);
 	for (int i = 0; i < 64; ++i) {
@@ -216,8 +219,8 @@ void encrypt_decrypt(
 	}
 	tablecheck(infile, IP, E, P, V, PC1, PC2, table_s);
 	infile.close();
-	generate_inv_IP();
-	subkey(key_bits);
+	generate_inv_IP(IP, inv_IP);
+	subkey(key_bits, keys, PC1, PC2);
 	for (bool start = true; ; start = false) {
 		unsigned char ch;
 		vector<bool> block;
@@ -232,6 +235,6 @@ void encrypt_decrypt(
 		while(block.size() < 64){
 			block.push_back(0);
 		}
-		cout << encrypt_decrypt_block(block, start, decrypt);
+		cout << vec2char(encrypt_decrypt_block(block, start, decrypt, keys));
 	}
 }
