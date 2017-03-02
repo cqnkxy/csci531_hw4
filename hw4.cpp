@@ -114,14 +114,14 @@ void parse_encrypt3(int argc, char *argv[])
 		}
 	}
 	if (argc == 4) {
-		encrypt3_decrypt3(cin, key, tablefile, true);
+		encrypt3_decrypt3(cin, key, tablefile, false);
 	} else {
 		ifstream in(argv[4]);
 		if (!in.is_open()) {
 			cerr << "File not exits" << endl;
 			exit(1);
 		}
-		encrypt3_decrypt3(in, key, tablefile, true);
+		encrypt3_decrypt3(in, key, tablefile, false);
 		in.close();
 	}
 }
@@ -143,14 +143,14 @@ void parse_decrypt3(int argc, char *argv[])
 		}
 	}
 	if (argc == 4) {
-		encrypt3_decrypt3(cin, key, tablefile, false);
+		encrypt3_decrypt3(cin, key, tablefile, true);
 	} else {
 		ifstream in(argv[4]);
 		if (!in.is_open()) {
 			cerr << "File not exits" << endl;
 			exit(1);
 		}
-		encrypt3_decrypt3(in, key, tablefile, false);
+		encrypt3_decrypt3(in, key, tablefile, true);
 		in.close();
 	}
 }

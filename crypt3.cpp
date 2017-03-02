@@ -49,10 +49,11 @@ void encrypt3_decrypt3(
 		while(block.size() < 64){
 			block.push_back(0);
 		}
-		// for encrypt, decrypt flag in [false, true, false]
-		// for decrypt, decrypt flag in [true, false, true]
-		vector<bool> res = encrypt_decrypt_block(block, false, false^decrypt, keys_vec[0^(decrypt<<1)]);
-		res = encrypt_decrypt_block(res, false, true^decrypt, keys_vec[1]);
-		cout << vec2char(encrypt_decrypt_block(res, false, false^decrypt, keys_vec[2^(decrypt<<1)]));
+		// for encrypt, decrypt flag in [false, true, false], key order 0,1,2
+		// for decrypt, decrypt flag in [true, false, true], key order 2,1,0
+		block = encrypt_decrypt_block(block, false, false^decrypt, keys_vec[0^(decrypt<<1)]);
+		block = encrypt_decrypt_block(block, false, true^decrypt, keys_vec[1]);
+		block = encrypt_decrypt_block(block, false, false^decrypt, keys_vec[2^(decrypt<<1)]);
+		cout << vec2char(block);
 	}
 }
