@@ -7,8 +7,6 @@
 
 using namespace std;
 
-const bool DEBUG = false;
-
 // table: table name
 // lower and upper: the lower bound and upper bound occur times for each number
 void check_permutation(const string &table, const string &value, size_t size, int range, int lower, int upper, vector<int> &res)
@@ -186,10 +184,20 @@ void checkPC2(const string &value, vector<int> &res)
 	}
 }
 
-void tablecheck(std::istream &in)
+// Check & load tables.
+void tablecheck(
+	std::istream &in,
+	vector<int> &IP,
+	vector<int> &E,
+	vector<int> &P,
+	vector<int> &V,
+	vector<int> &PC1,
+	vector<int> &PC2,
+	vector<vector<int> > &table_s
+	)
 {
 	string line;
-	vector<vector<int> > table_s(8, vector<int>());
+	table_s.resize(8);
 	while (getline(in, line)) {
 		size_t equal_pos = line.find('=');
 		vector<int> res;
@@ -199,17 +207,17 @@ void tablecheck(std::istream &in)
 		}
 		string opt = line.substr(0, equal_pos);
 		if (opt == "IP") {
-			checkIP(line.substr(equal_pos+1, -1), res);
+			checkIP(line.substr(equal_pos+1, -1), IP);
 		} else if (opt == "E") {
-			checkE(line.substr(equal_pos+1, -1), res);
+			checkE(line.substr(equal_pos+1, -1), E);
 		} else if (opt == "P") {
-			checkP(line.substr(equal_pos+1, -1), res);
+			checkP(line.substr(equal_pos+1, -1), P);
 		} else if (opt == "V") {
-			checkV(line.substr(equal_pos+1, -1), res);
+			checkV(line.substr(equal_pos+1, -1), V);
 		} else if (opt == "PC1") {
-			checkPC1(line.substr(equal_pos+1, -1), res);
+			checkPC1(line.substr(equal_pos+1, -1), PC1);
 		} else if (opt == "PC2") {
-			checkPC2(line.substr(equal_pos+1, -1), res);
+			checkPC2(line.substr(equal_pos+1, -1), PC2);
 		} else if (opt[0] == 'S') {
 			checkS(line.substr(equal_pos+1, -1), table_s, atoi(opt.c_str()+1));
 		} else {
@@ -217,4 +225,11 @@ void tablecheck(std::istream &in)
 			exit(1);
 		}
 	}
+}
+
+void tablecheck(std::istream &in)
+{
+	vector<int> IP, E, P, V, PC1, PC2;
+	vector<vector<int> > table_s;
+	tablecheck(in, IP, E, P, V, PC1, PC2, table_s);
 }

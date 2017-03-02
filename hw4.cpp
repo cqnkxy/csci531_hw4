@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include "tablecheck.h"
+#include "crypt.h"
 
 using namespace std;
 
@@ -39,7 +40,31 @@ void parse_tablecheck(int argc, char *argv[])
 
 void parse_encrypt(int argc, char *argv[])
 {
-
+	if (argc != 4 && argc != 5) {
+		malformed_command();
+	}
+	string key, tablefile;
+	for (int i = 2; i <=3; i++) {
+		string opt(argv[i]);
+		if (opt.substr(0, 3) == "-t=") {
+			tablefile = opt.substr(3, -1);
+		} else if (opt.substr(0, 3) == "-k=") {
+			key = opt.substr(3, -1);
+		} else {
+			malformed_command();
+		}
+	}
+	if (argc == 4) {
+		encrypt(cin, key, tablefile);
+	} else {
+		ifstream in(argv[4]);
+		if (!in.is_open()) {
+			cerr << "File not exits" << endl;
+			exit(1);
+		}
+		encrypt(in, key, tablefile);
+		in.close();
+	}
 }
 
 void parse_decrypt(int argc, char *argv[])
