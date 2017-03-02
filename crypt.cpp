@@ -115,7 +115,7 @@ void subkey(vector<bool> &key_bits)
 	}
 	fprintf(stderr, "(C0,D0)=%s\n", vec2str(combine2vec(C, D)).c_str());
 	for (int i = 1; i <= 16; ++i) {
-		int vi = (i == 1 || i == 2 || i == 9 || i == 16) ? 1 : 2;
+		int vi = V[i-1];
 		left_circular_shift(C, vi);
 		left_circular_shift(D, vi);
 		vector<bool> CD = combine2vec(C, D);
